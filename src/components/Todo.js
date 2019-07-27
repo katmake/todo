@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 export default class Todo extends Component {
   render() {
@@ -6,6 +6,6 @@ export default class Todo extends Component {
       <div>
         <li>{this.props.todo}</li>
       </div>
-    )
+    );
   }
 }
