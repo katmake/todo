@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import uuid from "uuid";
 import Todo from "./Todo";
 import TodoInput from "./TodoInput";
 
@@ -8,9 +9,9 @@ export default class TodoList extends Component {
 
     this.state = {
       todos: [
-        { task: "have some coffee" },
-        { task: "walk the dog" },
-        { task: "take over the world" }
+        { task: "have some coffee", id: uuid() },
+        { task: "walk the dog", id: uuid() },
+        { task: "take over the world", id: uuid() }
       ]
     };
   }
@@ -27,7 +28,7 @@ export default class TodoList extends Component {
         <h1>Todo List</h1>
         <ul>
           {this.state.todos.map(todo => {
-            return <Todo todo={todo.task} />;
+            return <Todo key={todo.id} todo={todo.task} />;
           })}
         </ul>
         <TodoInput createTodo={this.createTodo} />

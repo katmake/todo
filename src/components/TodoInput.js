@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import uuid from "uuid";
 
 export default class TodoInput extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ export default class TodoInput extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.createTodo(this.state);
+    this.props.createTodo({...this.state, id: uuid()});
     this.setState({
       task: ""
     });
