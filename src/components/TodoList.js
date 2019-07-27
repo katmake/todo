@@ -22,6 +22,19 @@ export default class TodoList extends Component {
     });
   };
 
+  updateTodo = (id, updatedTask) => {
+    const updatedTodos = this.state.todos.map(todo => {
+      if(todo.id === id) {
+        return {...todo, task: updatedTask}
+      } else {
+        return todo
+      }
+    })
+    this.setState({
+      todos: updatedTodos
+    })
+  }
+
   deleteTodo = id => {
     this.setState({
       todos: this.state.todos.filter(todo => todo.id !== id)
@@ -39,6 +52,7 @@ export default class TodoList extends Component {
                 key={todo.id}
                 id={todo.id}
                 todo={todo.task}
+                updateTodo={this.updateTodo}
                 deleteTodo={this.deleteTodo}
               />
             );
