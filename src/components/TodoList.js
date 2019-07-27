@@ -22,13 +22,26 @@ export default class TodoList extends Component {
     });
   };
 
+  deleteTodo = id => {
+    this.setState({
+      todos: this.state.todos.filter(todo => todo.id !== id)
+    });
+  };
+
   render() {
     return (
       <div>
         <h1>Todo List</h1>
         <ul>
           {this.state.todos.map(todo => {
-            return <Todo key={todo.id} todo={todo.task} />;
+            return (
+              <Todo
+                key={todo.id}
+                id={todo.id}
+                todo={todo.task}
+                deleteTodo={this.deleteTodo}
+              />
+            );
           })}
         </ul>
         <TodoInput createTodo={this.createTodo} />
