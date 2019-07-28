@@ -12,7 +12,8 @@ export default class TodoList extends Component {
         { task: "have some coffee", id: uuid(), completed: false },
         { task: "walk the dog", id: uuid(), completed: false },
         { task: "take over the world", id: uuid(), completed: false }
-      ]
+      ],
+      displayTodos: "all"
     };
   }
 
@@ -58,14 +59,45 @@ export default class TodoList extends Component {
     this.setState({
       todos: this.state.todos.filter(todo => !todo.completed)
     });
-  }
+  };
+
+  changeDisplayTodos = str => {
+    this.setState({
+      displayTodos: str
+    });
+  };
 
   render() {
+    let todos;
+    let allTodos = this.state.todos;
+    let activeTodos = this.state.todos.filter(todo => !todo.completed);
+    let completedTodos = this.state.todos.filter(todo => todo.completed);
+
+    switch (this.state.displayTodos) {
+      case "all":
+        todos = allTodos;
+        break;
+      case "active":
+        todos = activeTodos;
+        break;
+      case "completed":
+        todos = completedTodos;
+        break;
+      default:
+        todos = allTodos;
+    }
+
+    const deleteAllCompletedBtn = (
+      <button onClick={this.deleteAllCompletedTodos}>
+        Delete All Completed Todos
+      </button>
+    );
+
     return (
       <div>
         <h1>Todo List</h1>
         <ul>
-          {this.state.todos.map(todo => {
+          {todos.map(todo => {
             return (
               <Todo
                 key={todo.id}
@@ -80,7 +112,19 @@ export default class TodoList extends Component {
           })}
         </ul>
         <TodoInput createTodo={this.createTodo} />
-        <button onClick={this.deleteAllCompletedTodos}>Delete All Completed Todos</button>
+        <div>
+          <span>Display:</span>
+          <button onClick={() => this.changeDisplayTodos("all")}>all</button>
+          <button onClick={() => this.changeDisplayTodos("active")}>
+            active
+          </button>
+          <button onClick={() => this.changeDisplayTodos("completed")}>
+            completed
+          </button>
+        </div>
+        {this.state.todos.some(todo => todo.completed)
+          ? deleteAllCompletedBtn
+          : null}
       </div>
     );
   }
