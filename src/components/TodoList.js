@@ -9,9 +9,9 @@ export default class TodoList extends Component {
 
     this.state = {
       todos: [
-        { task: "have some coffee", id: uuid() },
-        { task: "walk the dog", id: uuid() },
-        { task: "take over the world", id: uuid() }
+        { task: "have some coffee", id: uuid(), completed: false },
+        { task: "walk the dog", id: uuid(), completed: false },
+        { task: "take over the world", id: uuid(), completed: false }
       ]
     };
   }
@@ -24,20 +24,33 @@ export default class TodoList extends Component {
 
   updateTodo = (id, updatedTask) => {
     const updatedTodos = this.state.todos.map(todo => {
-      if(todo.id === id) {
-        return {...todo, task: updatedTask}
+      if (todo.id === id) {
+        return { ...todo, task: updatedTask };
       } else {
-        return todo
+        return todo;
       }
-    })
+    });
     this.setState({
       todos: updatedTodos
-    })
-  }
+    });
+  };
 
   deleteTodo = id => {
     this.setState({
       todos: this.state.todos.filter(todo => todo.id !== id)
+    });
+  };
+
+  toggleCompletion = id => {
+    const updatedTodos = this.state.todos.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, completed: !todo.completed };
+      } else {
+        return todo;
+      }
+    });
+    this.setState({
+      todos: updatedTodos
     });
   };
 
@@ -52,8 +65,10 @@ export default class TodoList extends Component {
                 key={todo.id}
                 id={todo.id}
                 todo={todo.task}
+                completed={todo.completed}
                 updateTodo={this.updateTodo}
                 deleteTodo={this.deleteTodo}
+                toggleCompletion={this.toggleCompletion}
               />
             );
           })}

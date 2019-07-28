@@ -18,7 +18,7 @@ export default class TodoInput extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.createTodo({ ...this.state, id: uuid() });
+    this.props.createTodo({ ...this.state, id: uuid(), completed: false });
     this.setState({
       task: ""
     });

@@ -36,8 +36,10 @@ export default class Todo extends Component {
 
   render() {
     const todo = (
-      <li>
-        <span>{this.props.todo}</span>
+      <li style={{textDecoration: this.props.completed ? "line-through" : ""}}>
+        <span onClick={() => this.props.toggleCompletion(this.props.id)}>
+          {this.props.todo}
+        </span>
         <button onClick={this.handleEdit}>Edit</button>
         <button onClick={this.handleDelete}>Delete</button>
       </li>
