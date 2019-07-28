@@ -54,6 +54,12 @@ export default class TodoList extends Component {
     });
   };
 
+  deleteAllCompletedTodos = () => {
+    this.setState({
+      todos: this.state.todos.filter(todo => !todo.completed)
+    });
+  }
+
   render() {
     return (
       <div>
@@ -74,6 +80,7 @@ export default class TodoList extends Component {
           })}
         </ul>
         <TodoInput createTodo={this.createTodo} />
+        <button onClick={this.deleteAllCompletedTodos}>Delete All Completed Todos</button>
       </div>
     );
   }
