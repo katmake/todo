@@ -55,6 +55,12 @@ export default class TodoList extends Component {
     });
   };
 
+  deleteAllTodos = () => {
+    this.setState({
+      todos: []
+    });
+  };
+
   deleteAllCompletedTodos = () => {
     this.setState({
       todos: this.state.todos.filter(todo => !todo.completed)
@@ -87,6 +93,9 @@ export default class TodoList extends Component {
         todos = allTodos;
     }
 
+    const deleteAllTodos = (
+      <button onClick={this.deleteAllTodos}>Delete All Todos</button>
+    );
     const deleteAllCompletedBtn = (
       <button onClick={this.deleteAllCompletedTodos}>
         Delete All Completed Todos
@@ -122,6 +131,7 @@ export default class TodoList extends Component {
             completed
           </button>
         </div>
+        {this.state.todos.length ? deleteAllTodos : null}
         {this.state.todos.some(todo => todo.completed)
           ? deleteAllCompletedBtn
           : null}
