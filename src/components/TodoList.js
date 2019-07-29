@@ -13,7 +13,8 @@ export default class TodoList extends Component {
         { task: "walk the dog", id: uuid(), completed: false },
         { task: "take over the world", id: uuid(), completed: false }
       ],
-      displayTodos: "all"
+      displayTodos: "all",
+      sortByStatus: false
     };
   }
 
@@ -57,13 +58,15 @@ export default class TodoList extends Component {
 
   deleteAllTodos = () => {
     this.setState({
-      todos: []
+      todos: [],
+      displayTodos: "all"
     });
   };
 
   deleteAllCompletedTodos = () => {
     this.setState({
-      todos: this.state.todos.filter(todo => !todo.completed)
+      todos: this.state.todos.filter(todo => !todo.completed),
+      displayTodos: "all"
     });
   };
 
@@ -73,15 +76,22 @@ export default class TodoList extends Component {
     });
   };
 
+  toggleSortByStatus = () => {
+    this.setState({
+      sortByStatus: !this.state.sortByStatus
+    });
+  };
+
   render() {
     let todos;
-    let allTodos = this.state.todos;
-    let activeTodos = this.state.todos.filter(todo => !todo.completed);
-    let completedTodos = this.state.todos.filter(todo => todo.completed);
+    const allTodos = this.state.todos;
+    const activeTodos = this.state.todos.filter(todo => !todo.completed);
+    const completedTodos = this.state.todos.filter(todo => todo.completed);
+    const sortedTodos = [...activeTodos, ...completedTodos];
 
     switch (this.state.displayTodos) {
       case "all":
-        todos = allTodos;
+        todos = !this.state.sortByStatus ? allTodos : sortedTodos;
         break;
       case "active":
         todos = activeTodos;
@@ -93,9 +103,36 @@ export default class TodoList extends Component {
         todos = allTodos;
     }
 
-    const deleteAllTodos = (
+    const sortByStatusForm = (
+      <form>
+        <label htmlFor="sortTodos">Move completed to the bottom</label>
+        <input
+          type="checkbox"
+          id="sortTodos"
+          name="sortTodos"
+          defaultChecked={this.state.sortByStatus}
+          onChange={this.toggleSortByStatus}
+        />
+      </form>
+    );
+
+    const changeDisplayBtns = (
+      <div>
+        <span>Display:</span>
+        <button onClick={() => this.changeDisplayTodos("all")}>all</button>
+        <button onClick={() => this.changeDisplayTodos("active")}>
+          active
+        </button>
+        <button onClick={() => this.changeDisplayTodos("completed")}>
+          completed
+        </button>
+      </div>
+    );
+
+    const deleteAllBtn = (
       <button onClick={this.deleteAllTodos}>Delete All Todos</button>
     );
+
     const deleteAllCompletedBtn = (
       <button onClick={this.deleteAllCompletedTodos}>
         Delete All Completed Todos
@@ -120,18 +157,14 @@ export default class TodoList extends Component {
             );
           })}
         </ul>
+
         <TodoInput createTodo={this.createTodo} />
-        <div>
-          <span>Display:</span>
-          <button onClick={() => this.changeDisplayTodos("all")}>all</button>
-          <button onClick={() => this.changeDisplayTodos("active")}>
-            active
-          </button>
-          <button onClick={() => this.changeDisplayTodos("completed")}>
-            completed
-          </button>
-        </div>
-        {this.state.todos.length ? deleteAllTodos : null}
+
+        {this.state.displayTodos === "all" && this.state.todos.length
+          ? sortByStatusForm
+          : null}
+        {this.state.todos.length ? changeDisplayBtns : null}
+        {this.state.todos.length ? deleteAllBtn : null}
         {this.state.todos.some(todo => todo.completed)
           ? deleteAllCompletedBtn
           : null}
