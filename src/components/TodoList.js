@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import uuid from "uuid";
 import Todo from "./Todo";
 import TodoInput from "./TodoInput";
+import SortTodosForm from "./SortTodosForm";
+import FilterTodosSection from "./FilterTodosSection";
+import DeleteTodosSection from "./DeleteTodosSection";
 
 export default class TodoList extends Component {
   constructor(props) {
@@ -70,7 +73,7 @@ export default class TodoList extends Component {
     });
   };
 
-  changeDisplayTodos = str => {
+  filterTodos = str => {
     this.setState({
       displayTodos: str
     });
@@ -103,71 +106,49 @@ export default class TodoList extends Component {
         todos = allTodos;
     }
 
-    const sortByStatusForm = (
-      <form>
-        <label htmlFor="sortTodos">Move completed to the bottom</label>
-        <input
-          type="checkbox"
-          id="sortTodos"
-          name="sortTodos"
-          defaultChecked={this.state.sortByStatus}
-          onChange={this.toggleSortByStatus}
-        />
-      </form>
-    );
-
-    const changeDisplayBtns = (
-      <div>
-        <span>Display:</span>
-        <button onClick={() => this.changeDisplayTodos("all")}>all</button>
-        <button onClick={() => this.changeDisplayTodos("active")}>
-          active
-        </button>
-        <button onClick={() => this.changeDisplayTodos("completed")}>
-          completed
-        </button>
-      </div>
-    );
-
-    const deleteAllBtn = (
-      <button onClick={this.deleteAllTodos}>Delete All Todos</button>
-    );
-
-    const deleteAllCompletedBtn = (
-      <button onClick={this.deleteAllCompletedTodos}>
-        Delete All Completed Todos
-      </button>
+    const todoList = (
+      <ul>
+        {todos.map(todo => {
+          return (
+            <Todo
+              key={todo.id}
+              id={todo.id}
+              todo={todo.task}
+              completed={todo.completed}
+              updateTodo={this.updateTodo}
+              deleteTodo={this.deleteTodo}
+              toggleCompletion={this.toggleCompletion}
+            />
+          );
+        })}
+      </ul>
     );
 
     return (
       <div>
         <h1>Todo List</h1>
-        <ul>
-          {todos.map(todo => {
-            return (
-              <Todo
-                key={todo.id}
-                id={todo.id}
-                todo={todo.task}
-                completed={todo.completed}
-                updateTodo={this.updateTodo}
-                deleteTodo={this.deleteTodo}
-                toggleCompletion={this.toggleCompletion}
-              />
-            );
-          })}
-        </ul>
+        <div>
+          {this.state.todos.length ? todoList : <p>Your todo list is empty.</p>}
+        </div>
 
         <TodoInput createTodo={this.createTodo} />
 
-        {this.state.displayTodos === "all" && this.state.todos.length
-          ? sortByStatusForm
-          : null}
-        {this.state.todos.length ? changeDisplayBtns : null}
-        {this.state.todos.length ? deleteAllBtn : null}
-        {this.state.todos.some(todo => todo.completed)
-          ? deleteAllCompletedBtn
-          : null}
+        {this.state.displayTodos === "all" && this.state.todos.length ? (
+          <SortTodosForm
+            sortByStatus={this.state.sortByStatus}
+            toggleSortByStatus={this.toggleSortByStatus}
+          />
+        ) : null}
+
+        {this.state.todos.length ? (
+          <>
+            <FilterTodosSection filterTodos={this.filterTodos} />
+            <DeleteTodosSection
+              deleteAllTodos={this.deleteAllTodos}
+              deleteAllCompletedTodos={this.deleteAllCompletedTodos}
+            />
+          </>
+        ) : null}
       </div>
     );
   }
